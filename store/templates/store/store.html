@@ -4,37 +4,21 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-lg-4">
-        <img class="thumbnail" src="https://via.placeholder.com/640x360.png" alt="">
-        <div class="box-element product">
-            <h6><strong>Product</strong></h6>
-            <hr>
-            <button class="btn btn-outline-secondary add-btn">Add to Cart</button>
-            <a href="" class="btn btn-outline-success">View</a>
-            <h4 class="d-inline float-right"> 20 $</h4>
-        </div>
-    </div>
 
+    {% for product in products %}
     <div class="col-lg-4">
-        <img class="thumbnail" src="https://via.placeholder.com/640x360.png" alt="">
+        <!-- <img class="thumbnail" src="https://via.placeholder.com/640x360.png" alt=""> -->
+        <img class="thumbnail img-fluid w-100" src="{{ product.imageURL }}" alt="">
         <div class="box-element product">
-            <h6><strong>Product</strong></h6>
+            <h6><strong>{{ product.name }}</strong></h6>
             <hr>
-            <button class="btn btn-outline-secondary add-btn">Add to Cart</button>
+            <button class="btn btn-outline-secondary add-btn update-cart" data-product="{{product.id}}"
+                data-action="add" data-url="{% url 'store:update_item' %}">Add to Cart</button>
             <a href="" class="btn btn-outline-success">View</a>
-            <h4 class="d-inline float-right"> 20 $</h4>
+            <h4 class="d-inline float-right">Rp {{ product.price|floatformat:0 }}</h4>
         </div>
     </div>
+    {% endfor %}
 
-    <div class="col-lg-4">
-        <img class="thumbnail" src="https://via.placeholder.com/640x360.png" alt="">
-        <div class="box-element product">
-            <h6><strong>Product</strong></h6>
-            <hr>
-            <button class="btn btn-outline-secondary add-btn">Add to Cart</button>
-            <a href="" class="btn btn-outline-success">View</a>
-            <h4 class="d-inline float-right"> 20 $</h4>
-        </div>
-    </div>
 </div>
 {% endblock content %}
