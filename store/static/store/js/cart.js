@@ -17,23 +17,24 @@ for (i = 0; i < updateBtns.length; i++) {
 }
 
 function updateUserOrder(productId, action, url) {
-    console.log('User Logged in, sending data...');
+    console.log("User Logged in, sending data...");
 
     fetch(url, {
             method: "POST",
             headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken,
             },
             body: JSON.stringify({
-                'productId': productId,
-                'action': action
-            })
+                productId: productId,
+                action: action,
+            }),
         })
-        .then(response => {
+        .then((response) => {
             return response.json();
         })
-        .then(data => {
-            console.log(data);
-        })
+        .then((data) => {
+            let cart_total = document.getElementById('cart-total');
+            cart_total.innerHTML = data.total_item;
+        });
 }

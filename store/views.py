@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.core import serializers
+import json
 
 from .models import *
 
@@ -53,5 +55,29 @@ def checkout(request):
     }
     return render(request, 'store/checkout.html', context)
 
+
 def updateItem(request):
-    return JsonResponse('Item was added', safe=False)
+    data = json.loads(request.body)
+    productId = data['productId']
+    action = data['action']
+
+    customer = request.user.customer
+    product = Product.objects.get(id=productId)
+    order, created = Order.objects.get_or_create(
+        customer=customer, complete=False)
+    orderItem, created = OrderItem.objects.get_or_create(
+        order=order, product=product)
+
+    if action == 'add':
+        orderItem.quantity += 1
+    elif action == 'remove':
+        orderItem.quantity -= 1
+
+    orderItem.save()
+
+    if orderItem.quantity <= 0:
+        orderItem.delete()
+
+    total_item = order.get_cart_item
+
+    return JsonResponse({'total_item': total_item}, safe=False)
