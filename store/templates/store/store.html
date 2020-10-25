@@ -10,7 +10,7 @@
         <!-- <img class="thumbnail" src="https://via.placeholder.com/640x360.png" alt=""> -->
         <img class="thumbnail img-fluid w-100" src="{{ product.imageURL }}" alt="">
         <div class="box-element product">
-            <h6><strong>{{ product.name }}</strong></h6>
+            <h6><strong>{{ product.name|truncatechars:20 }}</strong></h6>
             <hr>
             <button class="btn btn-outline-secondary add-btn update-cart" data-product="{{product.id}}"
                 data-action="add" data-url="{% url 'store:update_item' %}">Add to Cart</button>

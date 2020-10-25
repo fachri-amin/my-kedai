@@ -5,19 +5,19 @@ for (i = 0; i < updateBtns.length; i++) {
         let productId = this.dataset.product;
         let action = this.dataset.action;
 
-        console.log("productId:", productId, "action:", action);
-
-        console.log("USER", user);
         if (user === "AnonymousUser") {
             console.log("not logged in");
         } else {
-            updateUserOrder(productId, action, this.dataset.url);
+            if (this.classList.contains('chg-quantity')) {
+                updateQuantity(productId, action, this.dataset.url, this)
+            } else {
+                updateUserOrder(productId, action, this.dataset.url);
+            }
         }
     });
 }
 
 function updateUserOrder(productId, action, url) {
-    console.log("User Logged in, sending data...");
 
     fetch(url, {
             method: "POST",
@@ -36,5 +36,41 @@ function updateUserOrder(productId, action, url) {
         .then((data) => {
             let cart_total = document.getElementById('cart-total');
             cart_total.innerHTML = data.total_item;
+            document.getElementById('cart-alert').classList.remove('hidden');
+            setTimeout(function () {
+                document.getElementById('cart-alert').classList.add('hidden');
+            }, 3000);
+        });
+}
+
+function updateQuantity(productId, action, url, element) {
+
+    fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken,
+            },
+            body: JSON.stringify({
+                productId: productId,
+                action: action,
+            }),
+        })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            arrowParent = element.parentElement;
+            quantityParent = arrowParent.parentElement;
+            productParent = quantityParent.parentElement;
+            document.getElementById('items').innerHTML = data.total_item;
+            document.getElementById('total-price').innerHTML = `Rp ${data.total}`;
+            document.getElementById('cart-total').innerHTML = data.total_item;
+            if (data.quantity == 0) {
+                productParent.remove();
+            } else {
+                quantityParent.firstElementChild.innerHTML = data.quantity;
+                productParent.lastElementChild.innerHTML = data.item_price;
+            }
         });
 }

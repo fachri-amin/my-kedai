@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.core import serializers
+from django.core.paginator import Paginator
 import json
 
 from .models import *
@@ -19,7 +20,6 @@ def store(request):
         cartItems = 0
 
     products = Product.objects.all()
-    cartItems = order.get_cart_item
     context = {
         'products': products,
         'cartItems': cartItems,
@@ -93,6 +93,19 @@ def updateItem(request):
     if orderItem.quantity <= 0:
         orderItem.delete()
 
-    total_item = order.get_cart_item
+    try:
+        quantity = orderItem.quantity
+    except OrderItem.DoesNotExist:
+        quantity = 0
 
-    return JsonResponse({'total_item': total_item}, safe=False)
+    total_item = order.get_cart_item
+    total_price = order.get_cart_total
+
+    json_response = {
+        'total_item': total_item,
+        'quantity': quantity,
+        'total': total_price,
+        'item_price': orderItem.get_total
+    }
+
+    return JsonResponse(json_response, safe=False)
