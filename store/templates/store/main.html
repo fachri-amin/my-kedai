@@ -14,6 +14,9 @@
     <!-- My Style -->
     <link rel="stylesheet" href="{% static 'store/css/main.css' %}">
 
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-JRnKhqvSqBjFQqZL">
+    </script>
+
     <script>
         let user = '{{request.user}}'
 
@@ -32,7 +35,31 @@
             }
             return cookieValue;
         }
-        const csrftoken = getToken('csrftoken');
+        var csrftoken = getToken('csrftoken');
+
+        function getCookie(name) {
+            // split cookie string and get all individual name=value pairs in an array
+            let cookieArr = document.cookie.split(';');
+
+            // loop through the array elements
+            for (let i = 0; i < cookieArr.length; i++) {
+                let cookiePair = cookieArr[i].split("=");
+                /* removing whitespace at the beginning of the cookie name 
+                and compare it with the given string*/
+                if (name == cookiePair[0].trim()) {
+                    //decode the cookie value and return 
+                    return decodeURIComponent(cookiePair[1]);
+                }
+            }
+            // return null if not found
+            return null
+        }
+
+        let cart = JSON.parse(getCookie('cart'));
+        if (!cart) {
+            cart = {}
+            document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/';
+        }
     </script>
 
     <title>My Kedai</title>

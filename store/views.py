@@ -3,21 +3,18 @@ from django.http import JsonResponse
 from django.core import serializers
 from django.core.paginator import Paginator
 import json
+import datetime
 
 from .models import *
+from .utils import cookieCart, cartData, guestOrder, makePayment
 
 # Create your views here.
 
 
 def store(request):
 
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(
-            customer=customer, complete=False)
-        cartItems = order.get_cart_item
-    else:
-        cartItems = 0
+    data = cartData(request)
+    cartItems = data['cartItems']
 
     products = Product.objects.all()
     context = {
@@ -29,19 +26,11 @@ def store(request):
 
 def cart(request):
 
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(
-            customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItems = order.get_cart_item
-    else:
-        items = []
-        order = {
-            'get_cart_total': 0,
-            'get_cart_item': 0,
-        }
-        cartItems = 0
+    data = cartData(request)
+    order = data['order']
+    items = data['items']
+    cartItems = data['cartItems']
+
     context = {
         'items': items,
         'order': order,
@@ -52,21 +41,15 @@ def cart(request):
 
 def checkout(request):
 
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(
-            customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItems = order.get_cart_item
-    else:
-        items = []
-        order = {
-            'get_cart_total': 0,
-            'get_cart_item': 0,
-        }
+    data = cartData(request)
+    order = data['order']
+    items = data['items']
+    cartItems = data['cartItems']
+
     context = {
         'items': items,
         'order': order,
+        'cartItems': cartItems,
     }
     return render(request, 'store/checkout.html', context)
 
@@ -109,3 +92,45 @@ def updateItem(request):
     }
 
     return JsonResponse(json_response, safe=False)
+
+
+def processOrder(request):
+    data = json.loads(request.body)
+    transaction_id = datetime.datetime.now().timestamp()
+
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            customer = request.user.customer
+            order, created = Order.objects.get_or_create(
+                customer=customer, complete=False)
+        else:
+            customer, order = guestOrder(request, data)
+
+        total = float(data['form']['total'])
+        order.transaction_id = transaction_id
+
+        if total == order.get_cart_total:
+            order.complete = True
+
+        order.save()
+
+        if order.shipping == True:
+            ShippingAddress.objects.create(
+                customer=customer,
+                order=order,
+                address=data['shipping']['address'],
+                city=data['shipping']['city'],
+                state=data['shipping']['state'],
+                zipcode=data['shipping']['zipcode']
+            )
+
+        payment_data = {
+            'order_id': order.transaction_id,
+            'gross_amount': order.get_cart_total,
+            'name': customer.name,
+            'email': customer.email,
+        }
+
+        token = makePayment(request, payment_data)
+
+    return JsonResponse({'token': token}, safe=False)
