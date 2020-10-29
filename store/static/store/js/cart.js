@@ -1,3 +1,9 @@
+let registerAnchor = document.getElementById('register-anchor')
+
+registerAnchor.addEventListener('click', function (e) {
+    e.preventDefault()
+})
+
 let updateBtns = document.getElementsByClassName("update-cart");
 
 for (i = 0; i < updateBtns.length; i++) {

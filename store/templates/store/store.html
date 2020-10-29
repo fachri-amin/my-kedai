@@ -3,6 +3,22 @@
 
 
 {% block content %}
+<div class="alert alert-danger px-2 py-0 mt-0 mb-0 mr-auto hidden" id="cart-alert" role="alert">
+    Succes add item to cart!
+</div>
+
+
+{% if messages %}
+
+{% for message in messages %}
+<div class="alert alert-danger px-2 py-0 mt-0 mb-0 mr-auto text-center" id="cart-alert" role="alert">
+    {{message}}
+</div>
+{% endfor %}
+
+{% endif %}
+
+
 <div class="row">
 
     {% for product in products %}

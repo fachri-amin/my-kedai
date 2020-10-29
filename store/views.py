@@ -1,7 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.core import serializers
 from django.core.paginator import Paginator
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth import get_user_model
 import json
 import datetime
 
@@ -134,3 +137,47 @@ def processOrder(request):
         token = makePayment(request, payment_data)
 
     return JsonResponse({'token': token}, safe=False)
+
+
+def loginView(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+
+        user = authenticate(request, email=email, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('store:store')
+        else:
+            messages.error(request, 'Login invalid')
+            return redirect('store:store')
+
+
+def registerView(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        username = request.POST['username']
+        name = request.POST['name']
+        password = request.POST['password']
+
+        user, created = get_user_model().objects.get_or_create(username=username)
+        if created:
+            user.email = email
+            user.set_password(user.password)
+            user.save()
+
+        customer, created = Customer.objects.get_or_create(email=email)
+        customer.name = name
+        customer.user = user
+        customer.save()
+
+        login(request, user)
+
+        return redirect('store:store')
+
+
+def logoutView(request):
+    logout(request)
+
+    return redirect(('store:store'))

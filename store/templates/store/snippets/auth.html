@@ -1,0 +1,99 @@
+<!-- Modal Login -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Login</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'store:login' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <input name="email" type="email" class="form-control" id="exampleInputEmail1"
+                            aria-describedby="emailHelp">
+                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                            else.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Password</label>
+                        <input name="password" type="password" class="form-control" id="exampleInputPassword1">
+                    </div>
+                    <div class="">
+                        <small class="float-left">Don't have an account yet? <a id="register-anchor" data-toggle="modal"
+                                data-target="#registerModal" data-dismiss="modal" aria-label="Close"
+                                class="text-primary" href="">Create new one</a>
+                        </small>
+                        <button type="submit" class="btn btn-primary float-right">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Register -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Register</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'store:register' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <input name="email" type="email" class="form-control" id="exampleInputEmail1"
+                            aria-describedby="emailHelp">
+                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                            else.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input name="username" type="text" class="form-control" id="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input name="name" type="text" class="form-control" id="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Password</label>
+                        <input name="password" type="password" class="form-control" id="exampleInputPassword1">
+                    </div>
+                    <div class="">
+                        <button type="submit" class="btn btn-primary float-right">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Logout -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Logout Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Please confirm your logout request
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a href="{% url 'store:logout' %}" class="btn btn-primary">Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
