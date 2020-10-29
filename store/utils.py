@@ -1,5 +1,7 @@
 import json
 import midtransclient
+from django.core.paginator import Paginator
+
 from .models import *
 
 
@@ -111,3 +113,38 @@ def makePayment(request, data):
     transaction = snap.create_transaction(param)
 
     return transaction['token']
+
+
+def productPaginator(request, product_list, per_page, number_paginator):
+    per_page = 9
+    paginator = Paginator(product_list, per_page)
+    number_paginator = 2
+    total_page = paginator.num_pages
+
+    if request.GET.get('page'):
+        try:
+            page = int(request.GET['page'])
+        except:
+            return Http404
+
+        products = paginator.page(page)
+        start = (page - number_paginator) if page > number_paginator else 1
+        if page < (paginator.num_pages - number_paginator):
+            end = (page+number_paginator)
+        else:
+            end = paginator.num_pages
+    else:
+        page = 1
+        products = paginator.page(page)
+        start = 1
+        end = start + number_paginator
+
+    data = {
+        'start': start,
+        'end': end,
+        'page': page,
+        'total_page': total_page,
+        'products': products,
+    }
+
+    return data

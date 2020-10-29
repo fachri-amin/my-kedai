@@ -5,11 +5,12 @@ from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.http import Http404
 import json
 import datetime
 
 from .models import *
-from .utils import cookieCart, cartData, guestOrder, makePayment
+from .utils import cookieCart, cartData, guestOrder, makePayment, productPaginator
 
 # Create your views here.
 
@@ -19,10 +20,21 @@ def store(request):
     data = cartData(request)
     cartItems = data['cartItems']
 
-    products = Product.objects.all()
+    product_list = Product.objects.all()
+    per_page = 9
+    number_paginator = 2
+
+    product_pagination = productPaginator(
+        request, product_list, per_page, number_paginator)
+
     context = {
-        'products': products,
+        'products': product_pagination['products'],
         'cartItems': cartItems,
+        'start': product_pagination['start'],
+        'end': product_pagination['end'],
+        'page': product_pagination['page'],
+        'show_page_num': range(product_pagination['start'], product_pagination['end']+1),
+        'total_page': product_pagination['total_page'],
     }
     return render(request, 'store/store.html', context)
 
