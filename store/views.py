@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.http import Http404
+from django.db.models import Q
 import json
 import datetime
 
@@ -20,7 +21,13 @@ def store(request):
     data = cartData(request)
     cartItems = data['cartItems']
 
-    product_list = Product.objects.all()
+    if request.GET.get('search'):
+        search = request.GET.get('search')
+        product_list = Product.objects.filter(name__icontains=search)
+    else:
+        product_list = Product.objects.all()
+        search = False
+
     per_page = 9
     number_paginator = 2
 
@@ -36,6 +43,10 @@ def store(request):
         'show_page_num': range(product_pagination['start'], product_pagination['end']+1),
         'total_page': product_pagination['total_page'],
     }
+
+    if search:
+        context['search'] = search
+
     return render(request, 'store/store.html', context)
 
 

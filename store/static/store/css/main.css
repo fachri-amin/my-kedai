@@ -2,6 +2,10 @@ body {
     background-color: hsl(0, 0%, 98%);
 }
 
+/* * {
+    border: 1px solid;
+} */
+
 h1,
 h2,
 h3,

@@ -137,7 +137,7 @@ def productPaginator(request, product_list, per_page, number_paginator):
         page = 1
         products = paginator.page(page)
         start = 1
-        end = start + number_paginator
+        end = paginator.num_pages
 
     data = {
         'start': start,
