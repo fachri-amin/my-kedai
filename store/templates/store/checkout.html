@@ -61,7 +61,10 @@
                     <p>{{item.product.name}}</p>
                 </div>
                 <div style="flex: 2">
-                    <p>Rp {{item.product.price|floatformat:0}}</p>
+                    <p>Rp <script>
+                            rupiah('{{item.product.price|floatformat:0}}')
+                        </script>
+                    </p>
                 </div>
                 <div style="flex: 1">
                     <p>x{{item.quantity}}</p>
@@ -70,7 +73,10 @@
             {% endfor %}
 
             <h5>Items: {{order.get_cart_item}}</h5>
-            <h5>Total: Rp {{order.get_cart_total|floatformat:0}}</h5>
+            <h5>Total: Rp <script>
+                    rupiah('{{order.get_cart_total|floatformat:0}}')
+                </script>
+            </h5>
         </div>
     </div>
 </div>

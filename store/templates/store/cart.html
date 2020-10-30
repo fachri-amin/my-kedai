@@ -16,7 +16,9 @@
                         <h5>Items: <strong id="items">{{order.get_cart_item}}</strong></h5>
                     </th>
                     <th>
-                        <h5>Total: <strong id="total-price">Rp {{order.get_cart_total|floatformat:0}}</strong></h5>
+                        <h5>Total: <strong id="total-price">Rp <script>
+                                    rupiah('{{order.get_cart_total|floatformat:0}}')
+                                </script></strong></h5>
                     </th>
                     <th>
                         <a href="{% url 'store:checkout' %}" class="btn btn-success float-right m-1">Checkout</a>
@@ -40,7 +42,10 @@
             <div class="cart-row">
                 <div style="flex:2"><img class="row-image" src="{{item.product.imageURL}}" alt=""></div>
                 <div style="flex:2">{{item.product.name}}</div>
-                <div style="flex:1">Rp {{item.product.price|floatformat:0}}</div>
+                <div style="flex:1">Rp <script>
+                        rupiah('{{item.product.price|floatformat:0}}')
+                    </script>
+                </div>
                 <div style="flex:1">
                     <p class="quantity">{{item.quantity}}</p>
                     <div class="quantity">
@@ -52,7 +57,10 @@
                             src="{% static 'store/img/down-arrow.png' %}" alt="">
                     </div>
                 </div>
-                <div id="item-total" style="flex:1">Rp {{item.get_total|floatformat:0}}</div>
+                <div id="item-total" style="flex:1">Rp <script>
+                        rupiah('{{item.get_total|floatformat:0}}')
+                    </script>
+                </div>
             </div>
             {% endfor %}
 

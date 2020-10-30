@@ -60,6 +60,13 @@
             cart = {}
             document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/';
         }
+
+        function rupiah(angka) {
+            var reverse = angka.toString().split('').reverse().join(''),
+                ribuan = reverse.match(/\d{1,3}/g);
+            ribuan = ribuan.join('.').split('').reverse().join('');
+            document.write(ribuan);
+        }
     </script>
 
     <title>My Kedai</title>
