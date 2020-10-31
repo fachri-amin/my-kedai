@@ -50,11 +50,11 @@
                     <p class="quantity" data-product="{{item.product.id}}">{{item.quantity}}</p>
                     <div class="quantity">
                         <img class="chg-quantity update-cart" data-product="{{item.product.id}}" data-action="add"
-                            data-url="{% url 'store:update_item' %}" style="margin: -2px 1px;"
-                            src="{% static 'store/img/up-arrow.png' %}" alt="">
+                            data-url="{% url 'store:update_item' %}" data-urltotal="{% url 'store:get_order_total' %}"
+                            style="margin: -2px 1px;" src="{% static 'store/img/up-arrow.png' %}" alt="">
                         <img class="chg-quantity update-cart" data-product="{{item.product.id}}" data-action="remove"
-                            data-url="{% url 'store:update_item' %}" style="margin: -2px 1px;"
-                            src="{% static 'store/img/down-arrow.png' %}" alt="">
+                            data-url="{% url 'store:update_item' %}" data-urltotal="{% url 'store:get_order_total' %}"
+                            style="margin: -2px 1px;" src="{% static 'store/img/down-arrow.png' %}" alt="">
                     </div>
                 </div>
                 <div id="item-total" style="flex:1">Rp <script>

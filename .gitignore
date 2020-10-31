@@ -102,7 +102,7 @@ ENV/
 
 .DS_Store
 *.sqlite3
-media/
+# media/
 *.pyc
 *.db
 *.pid
@@ -110,3 +110,5 @@ media/
 **/migrations/**
 !**/migrations
 !**/migrations/__init__.py
+
+ecommerce/settings.py

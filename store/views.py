@@ -212,3 +212,22 @@ def showDetail(request):
     product_json = serializers.serialize('python', [product])
 
     return JsonResponse(product_json, safe=False)
+
+
+def getOrderTotal(request):
+    data = json.loads(request.body)
+    total_harga = 0
+    total_item = 0
+
+    for key, value in data.items():
+        productId = int(key)
+        harga_product = Product.objects.get(id=productId).price
+        total_harga += (harga_product*value['quantity'])
+        total_item += value['quantity']
+
+    json_data = {
+        'total_price': int(total_harga),
+        'total_item': total_item,
+    }
+
+    return JsonResponse(json_data, safe=False)

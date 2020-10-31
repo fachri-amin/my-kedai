@@ -13,13 +13,17 @@ for (i = 0; i < updateBtns.length; i++) {
 
         if (user === "AnonymousUser") {
             if (this.classList.contains("chg-quantity")) {
+                let urltotal = this.dataset.urltotal;
                 addCookieItem(productId, action, this);
+                updateTotal(urltotal);
             } else {
                 addCookieItem(productId, action, this);
             }
         } else {
             if (this.classList.contains("chg-quantity")) {
+                let urltotal = this.dataset.urltotal;
                 updateQuantity(productId, action, this.dataset.url, this);
+                updateTotal(urltotal);
             } else {
                 updateUserOrder(productId, action, this.dataset.url);
             }
@@ -93,6 +97,7 @@ function addCookieItem(productId, action, el) {
             cart[productId]["quantity"] += 1;
             if (el.classList.contains('chg-quantity')) {
                 document.querySelector(`p[data-product='${productId}']`).innerHTML = cart[productId]["quantity"];
+                fetch('')
             }
         }
     }
@@ -164,4 +169,26 @@ function getProductDetail(productId, url) {
             detailAdd.dataset.product = data[0].pk;
             console.log(data);
         })
+}
+
+function updateTotal(url) {
+    fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken,
+            },
+            body: JSON.stringify(cart),
+        })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            let reverse = data.total_price.toString().split('').reverse().join(''),
+                priceData = reverse.match(/\d{1,3}/g);
+            priceData = priceData.join('.').split('').reverse().join('');
+
+            document.getElementById('total-price').innerHTML = priceData;
+            document.getElementById('items').innerHTML = data.total_item;
+        });
 }

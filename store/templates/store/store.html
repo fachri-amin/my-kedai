@@ -36,12 +36,12 @@
                 data-product="{{product.id}}" data-toggle="modal" data-target="#detailModal">
                 View
             </button>
-            <h4 class="d-inline float-right">
+            <h5 class="d-inline float-right">
                 Rp
                 <script>
                     rupiah("{{ product.price|floatformat:0 }}");
                 </script>
-            </h4>
+            </h5>
         </div>
     </div>
     {% endfor %}
