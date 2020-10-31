@@ -110,6 +110,3 @@ media/
 **/migrations/**
 !**/migrations
 !**/migrations/__init__.py
-
-#settings.py
-ecommerce/settings.py
