@@ -13,9 +13,9 @@ for (i = 0; i < updateBtns.length; i++) {
 
         if (user === "AnonymousUser") {
             if (this.classList.contains("chg-quantity")) {
-                addCookieItem(productId, action, this.dataset.url);
+                addCookieItem(productId, action, this);
             } else {
-                addCookieItem(productId, action, this.dataset.url);
+                addCookieItem(productId, action, this);
             }
         } else {
             if (this.classList.contains("chg-quantity")) {
@@ -83,7 +83,7 @@ function updateQuantity(productId, action, url, element) {
         });
 }
 
-function addCookieItem(productId, action, url) {
+function addCookieItem(productId, action, el) {
     if (action == "add") {
         if (!cart[productId]) {
             cart[productId] = {
@@ -91,15 +91,21 @@ function addCookieItem(productId, action, url) {
             };
         } else {
             cart[productId]["quantity"] += 1;
-            document.querySelector(`p[data-product='${productId}']`).innerHTML = cart[productId]["quantity"];
+            if (el.classList.contains('chg-quantity')) {
+                document.querySelector(`p[data-product='${productId}']`).innerHTML = cart[productId]["quantity"];
+            }
         }
     }
 
     if (action == "remove") {
         cart[productId]["quantity"] -= 1;
-        document.querySelector(`p[data-product='${productId}']`).innerHTML = cart[productId]["quantity"];
+        if (el.classList.contains('chg-quantity')) {
+            document.querySelector(`p[data-product='${productId}']`).innerHTML = cart[productId]["quantity"];
+        }
         if (cart[productId]["quantity"] <= 0) {
-            document.querySelector(`div[data-product='${productId}']`).remove();
+            if (el.classList.contains('chg-quantity')) {
+                document.querySelector(`div[data-product='${productId}']`).remove();
+            }
             delete cart[productId];
         }
     }
@@ -123,4 +129,39 @@ function addCookieItem(productId, action, url) {
     cart_total.innerHTML = total_cart;
 
     // location.reload();
+}
+
+let detailBtns = document.querySelectorAll('.btn-detail');
+
+detailBtns.forEach(function (e) {
+
+    e.addEventListener('click', function () {
+        let productId = this.dataset.product
+        let url = this.dataset.url;
+
+        productDetail = getProductDetail(productId, url);
+    })
+});
+
+function getProductDetail(productId, url) {
+    fetch(url + '?id=' + productId)
+        .then((response) => response.json())
+        .then((data) => {
+            let title = document.getElementById('detail-title');
+            let description = document.getElementById('detail-description');
+            let price = document.getElementById('detail-price');
+            let image = document.getElementById('detail-image');
+            let detailAdd = document.getElementById('detail-to-add');
+
+            let reverse = data[0].fields.price.toString().split('').reverse().join(''),
+                priceData = reverse.match(/\d{1,3}/g);
+            priceData = priceData.join('.').split('').reverse().join('');
+
+            title.innerHTML = data[0].fields.name;
+            description.innerHTML = data[0].fields.description;
+            price.innerHTML = 'Rp. ' + priceData;
+            image.src = '/media/' + data[0].fields.image;
+            detailAdd.dataset.product = data[0].pk;
+            console.log(data);
+        })
 }

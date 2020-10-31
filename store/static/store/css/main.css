@@ -35,7 +35,7 @@ h6 {
 }
 
 .bg-dark {
-    background-color: #4f868c !important;
+    background-color: #00bcd4 !important;
 }
 
 #cart-icon {
@@ -108,4 +108,28 @@ h6 {
 
 .hidden {
     display: none !important;
+}
+
+@media (max-width: 800px) {
+    .search {
+        width: 75%;
+        margin-left: 0px !important;
+        float: none;
+    }
+
+    .search-wrapper {
+        padding-left: 0px;
+        overflow: auto;
+        text-align: left;
+    }
+
+    .form-search {
+        padding: 0px;
+    }
+
+    .btn-search {
+        float: none;
+        margin-right: auto;
+        margin-left: auto;
+    }
 }

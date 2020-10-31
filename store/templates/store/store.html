@@ -1,10 +1,10 @@
 {% extends 'store/main.html' %} {% load static %} {% block content %}
-<div class="text-center my-4 overflow-auto pt-2 px-4">
-    <form method="GET" action="">
+<div class="text-center my-4 overflow-auto pt-2 px-4 search-wrapper">
+    <form class="overflow-auto p-0 form-search" method="GET" action="">
         <input name="search" style="display: inline-block"
-            class="form-control rounded-0 float-left ml-5 mr-0 col-lg-10 border-info" aria-describedby="button-addon2"
-            type="text" placeholder="What are you looking for?" />
-        <button class="btn btn-outline-info ml-0 float-left" type="submit" id="button-addon2">
+            class="form-control rounded-0 float-left ml-5 mr-0 col-lg-10 border-info search"
+            aria-describedby="button-addon2" type="text" placeholder="What are you looking for?" />
+        <button class="btn btn-outline-info ml-0 float-left btn-search" type="submit" id="button-addon2">
             Search
         </button>
     </form>
@@ -32,7 +32,10 @@
                 data-action="add" data-url="{% url 'store:update_item' %}">
                 Add to Cart
             </button>
-            <a href="" class="btn btn-outline-success">View</a>
+            <button type="button" class="btn btn-outline-success btn-detail" data-url="{% url 'store:show_detail' %}"
+                data-product="{{product.id}}" data-toggle="modal" data-target="#detailModal">
+                View
+            </button>
             <h4 class="d-inline float-right">
                 Rp
                 <script>
@@ -153,6 +156,49 @@
                 {% endif %}
             </ul>
             {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Detail Modal -->
+<!-- Modal -->
+<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detail-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="detail-title"></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <img class="thumbnail h-100" id="detail-image" src="" alt="" />
+                    </div>
+                    <div class="col-lg-6">
+                        <table class="table">
+                            <tr>
+                                <td><strong>Description</strong></td>
+                                <td>:</td>
+                                <td id="detail-description"></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Price</strong></td>
+                                <td>:</td>
+                                <td>
+                                    <h3 id="detail-price"></h3>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="detail-to-add" class="btn btn-primary update-cart" data-product=""
+                    data-action="add" data-url="{% url 'store:update_item' %}">Add to Cart</button>
+            </div>
         </div>
     </div>
 </div>

@@ -204,3 +204,11 @@ def logoutView(request):
     logout(request)
 
     return redirect(('store:store'))
+
+
+def showDetail(request):
+    product = Product.objects.get(id=request.GET.get('id'))
+
+    product_json = serializers.serialize('python', [product])
+
+    return JsonResponse(product_json, safe=False)
