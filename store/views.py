@@ -167,7 +167,13 @@ def loginView(request):
         email = request.POST['email']
         password = request.POST['password']
 
-        user = authenticate(request, email=email, password=password)
+        try:
+            user = get_user_model().objects.get(email=email)
+            username = user.username
+        except:
+            username = ''
+
+        user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
